@@ -64,8 +64,9 @@ import io.github.mzmine.util.files.FileAndPathUtil;
 import io.github.mzmine.util.scans.ScanUtils;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -183,7 +184,7 @@ public class MsMsQualityExportTask extends AbstractTask {
   public void run() {
     setStatus(TaskStatus.PROCESSING);
 
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(exportFile))) {
+    try (BufferedWriter writer = Files.newBufferedWriter(exportFile.toPath(), StandardCharsets.UTF_8)) {
       writer.write(
           String.join(separator, "feature_list", SpectrumMsMsQuality.getHeader(separator)));
       writer.newLine();

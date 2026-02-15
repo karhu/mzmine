@@ -36,9 +36,11 @@ import io.github.mzmine.taskcontrol.AbstractTask;
 import io.github.mzmine.taskcontrol.TaskStatus;
 import io.github.mzmine.util.scans.ScanUtils;
 import io.github.mzmine.util.scans.ScanUtils.IntegerMode;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.Instant;
@@ -123,9 +125,9 @@ public class AdapMgfExportTask extends AbstractTask {
       }
 
       // Open file
-      FileWriter writer;
+      BufferedWriter writer;
       try {
-        writer = new FileWriter(curFile);
+        writer = Files.newBufferedWriter(curFile.toPath(), StandardCharsets.UTF_8);
       } catch (Exception e) {
         setStatus(TaskStatus.ERROR);
         setErrorMessage("Could not open file " + curFile + " for writing.");
@@ -166,7 +168,7 @@ public class AdapMgfExportTask extends AbstractTask {
     }
   }
 
-  private void exportFeatureList(FeatureList featureList, FileWriter writer) throws IOException {
+  private void exportFeatureList(FeatureList featureList, BufferedWriter writer) throws IOException {
     for (FeatureListRow row : featureList.getRows()) {
       Scan ip = row.getMostIntenseFragmentScan();
       if (ip == null) {
@@ -179,7 +181,7 @@ public class AdapMgfExportTask extends AbstractTask {
     }
   }
 
-  private void exportRow(FileWriter writer, FeatureListRow row, Scan ip) throws IOException {
+  private void exportRow(BufferedWriter writer, FeatureListRow row, Scan ip) throws IOException {
     // data points of this cluster
     DataPoint dataPoints[] = ScanUtils.extractDataPoints(ip);
     if (!fractionalMZ) {

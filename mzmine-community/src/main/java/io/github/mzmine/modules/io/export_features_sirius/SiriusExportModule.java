@@ -49,7 +49,8 @@ import io.github.mzmine.util.ExitCode;
 import io.github.mzmine.util.exceptions.ExceptionUtils;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.time.Instant;
 import java.util.Collection;
 import org.jetbrains.annotations.NotNull;
@@ -94,7 +95,7 @@ public class SiriusExportModule implements MZmineProcessingModule {
         .getMatchingFeatureLists()[0];
     final File fileForFeatureList = task.getFileForFeatureList(flist);
 
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileForFeatureList))) {
+    try (BufferedWriter writer = Files.newBufferedWriter(fileForFeatureList.toPath(), StandardCharsets.UTF_8)) {
       task.exportRow(writer, row);
     } catch (Exception e) {
       e.printStackTrace();
@@ -119,7 +120,7 @@ public class SiriusExportModule implements MZmineProcessingModule {
           .getMatchingFeatureLists()[0];
       final File fileForFeatureList = task.getFileForFeatureList(flist);
 
-      try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileForFeatureList))) {
+      try (BufferedWriter writer = Files.newBufferedWriter(fileForFeatureList.toPath(), StandardCharsets.UTF_8)) {
         for (FeatureListRow row : rows) {
           task.exportRow(writer, row);
         }

@@ -42,8 +42,10 @@ import io.github.mzmine.util.files.FileAndPathUtil;
 import io.github.mzmine.util.scans.ScanUtils;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.Optional;
@@ -140,7 +142,8 @@ public class ExportScansTask extends AbstractTask {
   public void exportText() throws IOException {
 
     // Open the writer - append data if file already exists
-    final BufferedWriter writer = new BufferedWriter(new FileWriter(exportFile, true));
+    final BufferedWriter writer = Files.newBufferedWriter(exportFile.toPath(),
+        StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
     try {
       for (Scan scan : scans) {
         logger.info("Exporting scan #" + scan.getScanNumber() + " of raw file: "

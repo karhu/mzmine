@@ -38,9 +38,11 @@ import io.github.mzmine.taskcontrol.TaskStatus;
 import io.github.mzmine.util.annotations.CompoundAnnotationUtils;
 import io.github.mzmine.util.scans.ScanUtils;
 import io.github.mzmine.util.scans.ScanUtils.IntegerMode;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.regex.Matcher;
@@ -126,9 +128,9 @@ public class AdapMspExportTask extends AbstractTask {
       }
 
       // Open file
-      FileWriter writer;
+      BufferedWriter writer;
       try {
-        writer = new FileWriter(curFile);
+        writer = Files.newBufferedWriter(curFile.toPath(), StandardCharsets.UTF_8);
       } catch (Exception e) {
         setStatus(TaskStatus.ERROR);
         setErrorMessage("Could not open file " + curFile + " for writing.");
@@ -167,7 +169,7 @@ public class AdapMspExportTask extends AbstractTask {
       setStatus(TaskStatus.FINISHED);
   }
 
-  private void exportFeatureList(FeatureList featureList,final FileWriter writer, File curFile)
+  private void exportFeatureList(FeatureList featureList,final BufferedWriter writer, File curFile)
       throws IOException {
     final String newLine = System.lineSeparator();
 

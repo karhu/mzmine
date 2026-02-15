@@ -40,8 +40,9 @@ import io.github.mzmine.util.files.FileAndPathUtil;
 import io.github.mzmine.util.io.CSVUtils;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -137,7 +138,7 @@ class MetaboAnalystExportTask extends AbstractTask {
       }
 
       // Open file
-      try (BufferedWriter writer = new BufferedWriter(new FileWriter(curFile, false))) {
+      try (BufferedWriter writer = Files.newBufferedWriter(curFile.toPath(), StandardCharsets.UTF_8)) {
         // Get number of rows
         totalRows = featureList.getNumberOfRows();
 
