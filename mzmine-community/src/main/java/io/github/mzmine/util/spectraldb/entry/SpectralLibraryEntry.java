@@ -134,10 +134,20 @@ public interface SpectralLibraryEntry extends MassList {
       return null;
     }
     try {
-
-      // try to cast and if it fails then return null because those values are loaded from different sources
-      // and some fields may have different types
-      return (T) getOrElse(field, null);
+      // values are loaded from different sources and some fields may have different types
+      final Object raw = getOrElse(field, null);
+      if (raw == null) {
+        return null;
+      }
+      if (type.getValueClass().isInstance(raw)) {
+        return (T) raw;
+      }
+      // try the DataType mapper for String values (e.g. IonTypeParser for IonTypeType)
+      final var mapper = type.getMapper();
+      if (raw instanceof String str && mapper != null) {
+        return mapper.apply(str);
+      }
+      return null;
     } catch (Exception e) {
       return null;
     }
