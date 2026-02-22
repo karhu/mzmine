@@ -49,6 +49,7 @@ import io.github.mzmine.datamodel.features.types.numbers.abstr.IntegerType;
 import io.github.mzmine.datamodel.features.types.numbers.abstr.LongType;
 import io.github.mzmine.datamodel.features.types.numbers.abstr.NumberType;
 import io.github.mzmine.datamodel.identities.iontype.IonType;
+import io.github.mzmine.datamodel.identities.iontype.IonTypeParser;
 import io.github.mzmine.datamodel.structures.StructureParser;
 import io.github.mzmine.javafx.components.factories.FxButtons;
 import io.github.mzmine.javafx.components.factories.FxTextFlows;
@@ -298,7 +299,12 @@ public class CompoundAnnotationViewBuilder extends FxViewBuilder<CompoundAnnotat
     model.getDataModel().addListener((MapChangeListener<DataType, Object>) change -> {
       if (change.getKey().equals(ionType) && change.wasAdded() && !Objects.equals(
           change.getValueAdded(), tf.getIonType())) {
-        tf.ionTypeProperty().set((IonType) change.getValueAdded());
+        Object value = change.getValueAdded();
+        if (value instanceof IonType ion) {
+          tf.ionTypeProperty().set(ion);
+        } else if (value instanceof String str) {
+          tf.ionTypeProperty().set(IonTypeParser.parse(str));
+        }
       }
     });
 
