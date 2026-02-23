@@ -46,6 +46,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -130,8 +131,8 @@ public class BioTransformerUtil {
       Process process = b.start();
       StringBuilder output = new StringBuilder();
       BufferedReader errorReader = new BufferedReader(
-          new InputStreamReader(process.getErrorStream()));
-      BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+          new InputStreamReader(process.getErrorStream(), StandardCharsets.UTF_8));
+      BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8));
 
       String line = null;
       String error = null;

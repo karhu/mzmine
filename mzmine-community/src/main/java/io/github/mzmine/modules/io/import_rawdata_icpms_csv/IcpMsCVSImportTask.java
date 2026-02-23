@@ -41,6 +41,7 @@ import io.github.mzmine.taskcontrol.AbstractTask;
 import io.github.mzmine.taskcontrol.TaskStatus;
 import io.github.mzmine.util.MemoryMapStorage;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -95,7 +96,7 @@ public class IcpMsCVSImportTask extends AbstractTask implements RawDataImportTas
     logger.setLevel(Level.ALL);
 
     try {
-      scanner = new Scanner(file);
+      scanner = new Scanner(file, StandardCharsets.UTF_8);
 
       dataSource = getFileName(scanner);
       if (dataSource == null) {

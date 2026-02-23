@@ -42,8 +42,9 @@ import jakarta.json.JsonValue;
 import jakarta.json.JsonValue.ValueType;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -88,7 +89,7 @@ public class MonaJsonParser extends SpectralDBTextParser {
     final LibraryParsingErrors errors = new LibraryParsingErrors(library.getName());
 
     // create db
-    try (BufferedReader br = new BufferedReader(new FileReader(dataBaseFile))) {
+    try (BufferedReader br = Files.newBufferedReader(dataBaseFile.toPath(), StandardCharsets.UTF_8)) {
       // test on first ten if it is really a MoNA file
       String l = br.readLine();
       while (l != null) {

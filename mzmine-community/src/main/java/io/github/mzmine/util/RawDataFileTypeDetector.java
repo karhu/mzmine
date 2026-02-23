@@ -26,10 +26,8 @@
 package io.github.mzmine.util;
 
 import io.github.mzmine.datamodel.PolarityType;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -298,7 +296,7 @@ public class RawDataFileTypeDetector {
     final PatternMatchCounter tofModeImsCounter = new PatternMatchCounter(tofModeIMSPattern);
     final PatternMatchCounter mobilityFunctionCounter = new PatternMatchCounter(mobilityMsFunctionPattern);
 
-    try (var reader = new BufferedReader(new FileReader(new File(watersFolder, "_extern.inf")))) {
+    try (var reader = Files.newBufferedReader(new File(watersFolder, "_extern.inf").toPath(), StandardCharsets.UTF_8)) {
       reader.lines().forEach(line -> {
         parentCounter.checkMatch(line);
         ddaCounter.checkMatch(line);

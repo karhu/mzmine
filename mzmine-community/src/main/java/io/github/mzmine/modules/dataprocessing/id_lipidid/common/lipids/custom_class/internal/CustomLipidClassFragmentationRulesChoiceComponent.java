@@ -32,11 +32,13 @@ import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.modules.dataprocessing.id_lipidid.common.identification.LipidFragmentationRule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.util.ExitCode;
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -122,7 +124,7 @@ class CustomLipidClassFragmentationRulesChoiceComponent extends BorderPane {
       }
       try {
         Gson gson = new Gson();
-        FileReader fileReader = new FileReader(file);
+        BufferedReader fileReader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8);
         List<LipidFragmentationRule> lipidFragmentationRules = gson.fromJson(fileReader,
             new TypeToken<List<LipidFragmentationRule>>() {
             }.getType());
@@ -131,7 +133,7 @@ class CustomLipidClassFragmentationRulesChoiceComponent extends BorderPane {
             listView.getItems().add(rule);
           }
         }
-      } catch (FileNotFoundException ex) {
+      } catch (IOException ex) {
         logger.log(Level.WARNING, "Could not open Custom Lipid Fragmentation Rule .json file");
         ex.printStackTrace();
       }

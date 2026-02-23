@@ -44,8 +44,8 @@ import io.github.mzmine.parameters.parametertypes.tolerances.mobilitytolerance.M
 import io.github.mzmine.util.CSVParsingUtils;
 import io.github.mzmine.util.FeatureListUtils;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -125,9 +125,7 @@ public class CCSUtils {
    */
   public static List<CCSCalibrant> getCalibrantsFromCSV(final File file)
       throws IOException, CsvException {
-    final FileReader fileReader = new FileReader(file);
     final List<String[]> content = CSVParsingUtils.readData(file, ";");
-    fileReader.close();
 
     List<ImportType<?>> importTypes = CSVParsingUtils.findLineIds(
         List.of(new ImportType<>(true, "mz", DataTypes.get(MZType.class)), //

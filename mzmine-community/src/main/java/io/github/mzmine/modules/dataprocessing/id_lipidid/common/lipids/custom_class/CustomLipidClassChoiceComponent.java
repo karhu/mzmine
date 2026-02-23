@@ -32,11 +32,13 @@ import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.modules.dataprocessing.id_lipidid.common.lipids.custom_class.internal.AddCustomLipidClassParameters;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.util.ExitCode;
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -117,7 +119,7 @@ public class CustomLipidClassChoiceComponent extends BorderPane {
       try {
         Gson gson = new Gson();
         for (File file : files) {
-          FileReader fileReader = new FileReader(file);
+          BufferedReader fileReader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8);
           List<CustomLipidClass> customLipidClasses = gson.fromJson(fileReader,
               new TypeToken<List<CustomLipidClass>>() {
               }.getType());
@@ -128,7 +130,7 @@ public class CustomLipidClassChoiceComponent extends BorderPane {
           }
         }
 
-      } catch (FileNotFoundException ex) {
+      } catch (IOException ex) {
         logger.log(Level.WARNING, "Could not open Custom Lipid Class .json file");
         ex.printStackTrace();
       }

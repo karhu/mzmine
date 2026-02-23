@@ -53,9 +53,10 @@ import io.github.mzmine.util.spectraldb.entry.SpectralLibraryEntry;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -361,8 +362,8 @@ public class NistMsSearchTask extends AbstractTask {
     List<SpectralDBAnnotation> ids = null;
 
     // Read the results file.
-    try (BufferedReader reader = new BufferedReader(
-        new FileReader(new File(nistMsSearchDir, SEARCH_RESULTS_FILE_NAME)))) {
+    try (BufferedReader reader = Files.newBufferedReader(
+        new File(nistMsSearchDir, SEARCH_RESULTS_FILE_NAME).toPath(), StandardCharsets.UTF_8)) {
 
       // Read results.
       int lineCount = 1;
@@ -600,7 +601,7 @@ public class NistMsSearchTask extends AbstractTask {
 
     // Read the secondary locator file.
     File locatorFile2 = null;
-    try (BufferedReader reader = new BufferedReader(new FileReader(primaryLocatorFile))) {
+    try (BufferedReader reader = Files.newBufferedReader(primaryLocatorFile.toPath(), StandardCharsets.UTF_8)) {
       final String line = reader.readLine();
       if (line != null) {
         locatorFile2 = new File(line);

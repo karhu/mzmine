@@ -29,8 +29,9 @@ import io.github.mzmine.modules.dataprocessing.id_ccscalibration.CCSCalibration;
 import io.github.mzmine.modules.dataprocessing.id_ccscalibration.TwCCSCalibration;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -68,8 +69,7 @@ public class WatersImsCalibrationReader {
     String strCoefficient = null;
     String strExponent = null;
     String strT0 = null;
-    try (FileReader reader = new FileReader(calFile)) {
-      BufferedReader r = new BufferedReader(reader);
+    try (BufferedReader r = Files.newBufferedReader(calFile.toPath(), StandardCharsets.UTF_8)) {
 
       String s;
       while ((s = r.readLine()) != null) {
@@ -111,8 +111,7 @@ public class WatersImsCalibrationReader {
     String strEdc = null;
     String strEdcLow = null;
     String strEdcHigh = null;
-    try (FileReader reader = new FileReader(externInf)) {
-      BufferedReader r = new BufferedReader(reader);
+    try (BufferedReader r = Files.newBufferedReader(externInf.toPath(), StandardCharsets.UTF_8)) {
       String s;
 
       while ((s = r.readLine()) != null) {

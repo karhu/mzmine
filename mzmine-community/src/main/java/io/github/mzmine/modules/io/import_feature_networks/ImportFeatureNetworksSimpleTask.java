@@ -45,6 +45,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -151,7 +152,7 @@ public class ImportFeatureNetworksSimpleTask extends AbstractFeatureListTask {
   protected void process() {
     rowIdMap = FeatureListUtils.getRowIdMap(featureList);
 
-    try (Reader reader = Files.newBufferedReader(inputFile.toPath())) {
+    try (Reader reader = Files.newBufferedReader(inputFile.toPath(), StandardCharsets.UTF_8)) {
       separator = ',';
       try (CSVReader csvReader = new CSVReaderBuilder(reader).withCSVParser(
           new RFC4180ParserBuilder().withSeparator(separator).build()).build()) {

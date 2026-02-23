@@ -558,7 +558,7 @@ public class MSDKmzMLImportTask extends AbstractTask implements RawDataImportTas
 
       if (fis != null) {
         logger.finest("Began parsing file from stream");
-        try (Reader reader = new InputStreamReader(fis)) {
+        try (Reader reader = new InputStreamReader(fis, StandardCharsets.UTF_8)) {
           // buffered reader had no performance gains. most likely because the XMLStreamReader already buffers
 //        BufferedReader br = new BufferedReader(reader, 8192*4);
           XMLStreamReader xmlStreamReader = factory.createXMLStreamReader(reader);

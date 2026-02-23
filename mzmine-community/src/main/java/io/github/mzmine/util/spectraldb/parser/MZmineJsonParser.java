@@ -40,8 +40,9 @@ import jakarta.json.JsonReader;
 import jakarta.json.JsonValue;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.io.StringReader;
 import java.util.EnumMap;
 import java.util.Map;
@@ -71,7 +72,7 @@ public class MZmineJsonParser extends SpectralDBTextParser {
     int correct = 0;
     int error = 0;
     // create db
-    try (BufferedReader br = new BufferedReader(new FileReader(dataBaseFile))) {
+    try (BufferedReader br = Files.newBufferedReader(dataBaseFile.toPath(), StandardCharsets.UTF_8)) {
       for (String l; (l = br.readLine()) != null; ) {
         // main task was canceled?
         if (mainTask != null && mainTask.isCanceled()) {
