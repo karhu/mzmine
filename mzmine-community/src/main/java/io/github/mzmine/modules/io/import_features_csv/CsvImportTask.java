@@ -43,10 +43,8 @@ import io.github.mzmine.taskcontrol.AbstractTask;
 import io.github.mzmine.taskcontrol.TaskStatus;
 import io.github.mzmine.util.MemoryMapStorage;
 import io.github.mzmine.util.collections.BinarySearch.DefaultTo;
+import io.github.mzmine.util.files.FileAndPathUtil;
 import java.io.File;
-
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.time.Instant;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -87,7 +85,7 @@ public class CsvImportTask extends AbstractTask {
     setStatus(TaskStatus.PROCESSING);
 
     try {
-      var fileReader = Files.newBufferedReader(fileName.toPath(), StandardCharsets.UTF_8);
+      var fileReader = FileAndPathUtil.newBufferedReaderWithCharsetFallback(fileName.toPath());
       CSVReader csvReader = new CSVReader(fileReader);
       ModularFeatureList newFeatureList = new ModularFeatureList(fileName.getName(), storage,
           rawDataFile);

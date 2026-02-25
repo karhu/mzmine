@@ -31,6 +31,7 @@ import io.github.mzmine.taskcontrol.AbstractTask;
 import io.github.mzmine.util.spectraldb.entry.DBEntryField;
 import io.github.mzmine.util.spectraldb.entry.SpectralLibrary;
 import io.github.mzmine.util.spectraldb.entry.SpectralLibraryEntry;
+import io.github.mzmine.util.files.FileAndPathUtil;
 import io.github.mzmine.util.spectraldb.entry.SpectralLibraryEntryFactory;
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
@@ -43,8 +44,6 @@ import jakarta.json.JsonValue.ValueType;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -89,7 +88,7 @@ public class MonaJsonParser extends SpectralDBTextParser {
     final LibraryParsingErrors errors = new LibraryParsingErrors(library.getName());
 
     // create db
-    try (BufferedReader br = Files.newBufferedReader(dataBaseFile.toPath(), StandardCharsets.UTF_8)) {
+    try (BufferedReader br = FileAndPathUtil.newBufferedReaderWithCharsetFallback(dataBaseFile.toPath())) {
       // test on first ten if it is really a MoNA file
       String l = br.readLine();
       while (l != null) {

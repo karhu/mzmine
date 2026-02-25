@@ -362,8 +362,8 @@ public class NistMsSearchTask extends AbstractTask {
     List<SpectralDBAnnotation> ids = null;
 
     // Read the results file.
-    try (BufferedReader reader = Files.newBufferedReader(
-        new File(nistMsSearchDir, SEARCH_RESULTS_FILE_NAME).toPath(), StandardCharsets.UTF_8)) {
+    try (BufferedReader reader = FileAndPathUtil.newBufferedReaderWithCharsetFallback(
+        new File(nistMsSearchDir, SEARCH_RESULTS_FILE_NAME).toPath())) {
 
       // Read results.
       int lineCount = 1;

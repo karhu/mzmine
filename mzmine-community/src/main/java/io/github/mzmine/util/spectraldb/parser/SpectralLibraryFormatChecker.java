@@ -25,13 +25,12 @@
 
 package io.github.mzmine.util.spectraldb.parser;
 
+import io.github.mzmine.util.files.FileAndPathUtil;
 import io.github.mzmine.util.files.FileTypeFilter;
 import io.github.mzmine.util.spectraldb.parser.gnps.GNPSJsonParser;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
 /**
  * Get the right parser for the format. Checks for specific json formats.
@@ -69,7 +68,7 @@ public class SpectralLibraryFormatChecker {
 
   private static SpectralDBParser getJsonParser(final File dataBaseFile, final int bufferEntries,
       final LibraryEntryProcessor processor, boolean extensiveErrorLogging) throws IOException {
-    try (BufferedReader bufferedReader = Files.newBufferedReader(dataBaseFile.toPath(), StandardCharsets.UTF_8)) {
+    try (BufferedReader bufferedReader = FileAndPathUtil.newBufferedReaderWithCharsetFallback(dataBaseFile.toPath())) {
       char[] chars = new char[4048];
 
       final String content;

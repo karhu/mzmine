@@ -31,6 +31,7 @@ import io.github.mzmine.taskcontrol.AbstractTask;
 import io.github.mzmine.util.spectraldb.entry.DBEntryField;
 import io.github.mzmine.util.spectraldb.entry.SpectralLibrary;
 import io.github.mzmine.util.spectraldb.entry.SpectralLibraryEntry;
+import io.github.mzmine.util.files.FileAndPathUtil;
 import io.github.mzmine.util.spectraldb.entry.SpectralLibraryEntryFactory;
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
@@ -41,8 +42,6 @@ import jakarta.json.JsonValue;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.io.StringReader;
 import java.util.EnumMap;
 import java.util.Map;
@@ -72,7 +71,7 @@ public class MZmineJsonParser extends SpectralDBTextParser {
     int correct = 0;
     int error = 0;
     // create db
-    try (BufferedReader br = Files.newBufferedReader(dataBaseFile.toPath(), StandardCharsets.UTF_8)) {
+    try (BufferedReader br = FileAndPathUtil.newBufferedReaderWithCharsetFallback(dataBaseFile.toPath())) {
       for (String l; (l = br.readLine()) != null; ) {
         // main task was canceled?
         if (mainTask != null && mainTask.isCanceled()) {

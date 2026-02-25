@@ -30,12 +30,18 @@ import static java.nio.file.StandardOpenOption.READ;
 import static java.nio.file.StandardOpenOption.SPARSE;
 import static java.nio.file.StandardOpenOption.WRITE;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
+import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileChannel.MapMode;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.CodingErrorAction;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystems;
@@ -78,6 +84,32 @@ public class FileAndPathUtil {
   // flag to delete temp files as soon as possible
   private static volatile boolean earlyTempFileCleanup = true;
   private static volatile File MZMINE_TEMP_DIR = new File(System.getProperty("java.io.tmpdir"));
+
+  /**
+   * Detect the charset of a text file. Returns {@link StandardCharsets#UTF_8} if the entire file is
+   * valid UTF-8, otherwise falls back to Windows-1252. This handles files from legacy Windows
+   * programs (e.g. NIST MS Search) that use the system ANSI code page.
+   */
+  public static Charset detectCharset(Path path) throws IOException {
+    try {
+      byte[] bytes = Files.readAllBytes(path);
+      StandardCharsets.UTF_8.newDecoder().onMalformedInput(CodingErrorAction.REPORT)
+          .onUnmappableCharacter(CodingErrorAction.REPORT).decode(ByteBuffer.wrap(bytes));
+      return StandardCharsets.UTF_8;
+    } catch (CharacterCodingException e) {
+      return Charset.forName("windows-1252");
+    }
+  }
+
+  /**
+   * Opens a {@link BufferedReader} for the given path, trying UTF-8 first and falling back to
+   * Windows-1252 if the file contains bytes that are not valid UTF-8. Use this for files from
+   * external sources (spectral libraries, NIST results, user-provided CSVs) where the encoding is
+   * not guaranteed.
+   */
+  public static BufferedReader newBufferedReaderWithCharsetFallback(Path path) throws IOException {
+    return Files.newBufferedReader(path, detectCharset(path));
+  }
 
   /**
    * Count the number of lines in a text file (should be seconds even for large files)

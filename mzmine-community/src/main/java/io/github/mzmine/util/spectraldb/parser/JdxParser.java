@@ -30,12 +30,11 @@ import io.github.mzmine.taskcontrol.AbstractTask;
 import io.github.mzmine.util.spectraldb.entry.DBEntryField;
 import io.github.mzmine.util.spectraldb.entry.SpectralLibrary;
 import io.github.mzmine.util.spectraldb.entry.SpectralLibraryEntry;
+import io.github.mzmine.util.files.FileAndPathUtil;
 import io.github.mzmine.util.spectraldb.entry.SpectralLibraryEntryFactory;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -72,7 +71,7 @@ public class JdxParser extends SpectralDBTextParser {
     List<DataPoint> dps = new ArrayList<>();
     // create db
     int sep = -1;
-    try (BufferedReader br = Files.newBufferedReader(dataBaseFile.toPath(), StandardCharsets.UTF_8)) {
+    try (BufferedReader br = FileAndPathUtil.newBufferedReaderWithCharsetFallback(dataBaseFile.toPath())) {
       for (String l; (l = br.readLine()) != null; ) {
         // main task was canceled?
         if (mainTask.isCanceled()) {

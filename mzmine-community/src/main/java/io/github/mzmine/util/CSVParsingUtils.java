@@ -54,7 +54,6 @@ import io.github.mzmine.util.io.WriterOptions;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -271,7 +270,7 @@ public class CSVParsingUtils {
    */
   public static List<String[]> readData(final File file, final String separator)
       throws IOException, CsvException {
-    try (var reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
+    try (var reader = FileAndPathUtil.newBufferedReaderWithCharsetFallback(file.toPath())) {
 
       skipOptionalBom(reader);
 
@@ -283,7 +282,7 @@ public class CSVParsingUtils {
       throws IOException, CsvException {
     final Character sep = autoDetermineSeparatorDefaultFallback(file);
 
-    try (var reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
+    try (var reader = FileAndPathUtil.newBufferedReaderWithCharsetFallback(file.toPath())) {
       skipOptionalBom(reader);
 
       return readData(reader, sep.toString());
@@ -324,7 +323,7 @@ public class CSVParsingUtils {
 
     final List<Character> possibleSeparators = List.of('\t', ',', ';');
     for (Character sep : possibleSeparators) {
-      try (var reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
+      try (var reader = FileAndPathUtil.newBufferedReaderWithCharsetFallback(file.toPath())) {
         skipOptionalBom(reader);
         // the split line must have more than one entry to auto-determine,
         // bc otherwise we may think we found the separator, but we just have an array of length 1.
@@ -426,7 +425,7 @@ public class CSVParsingUtils {
    */
   public static String[][] readDataMapToColumns(final File file, final String sep, int mapStartLine)
       throws IOException, CsvException {
-    try (var reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
+    try (var reader = FileAndPathUtil.newBufferedReaderWithCharsetFallback(file.toPath())) {
       List<String[]> rows = readData(reader, sep);
       if (mapStartLine > 0) {
         rows.subList(0, mapStartLine).clear();

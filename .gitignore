@@ -34,4 +34,4 @@ mlreader.txt
 .vscode/
 
 dev-run.sh
-.sdkmanrc
+.sdkmanrcdebug-data/
